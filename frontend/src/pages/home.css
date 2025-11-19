@@ -1,4 +1,13 @@
 .ConnectButton{
   display: flex ;
-     /* 垂直居中 */
+  align-items: center;
+
+}
+.btn{
+  border: solid 3px red;
+  position: absolute;
+  right: 25rem;
+  top: 10rem;
+
+
 }

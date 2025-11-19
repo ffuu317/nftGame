@@ -1,6 +1,5 @@
 import Home from "./pages/home"
 import {BrowserRouter,Routes, Route, Link} from "react-router-dom"
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 
 

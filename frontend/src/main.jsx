@@ -5,18 +5,20 @@ import App from './App.jsx'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '@rainbow-me/rainbowkit/styles.css';
-import {getDefaultConfig,RainbowKitProvider,} from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
-import {mainnet,  polygon,optimism,arbitrum,  base,} from 'wagmi/chains';
 import {QueryClientProvider,  QueryClient,} from "@tanstack/react-query";
+import {RainbowKitProvider,} from '@rainbow-me/rainbowkit';
+import { config } from "./config"
 
-
-const config = getDefaultConfig({
+/*
+export const config = getDefaultConfig({
   appName: 'nftGAME',
   projectId: '18e0c03a63806b7cd58530353f7b951a',
-  chains: [mainnet, polygon, optimism, arbitrum, base],
-  ssr: false, // If your dApp uses server side rendering (SSR)
+  chains: [mainnet, polygon, optimism, arbitrum, base, sepolia],
+  ssr: false,
 });
+*/
+
 
 const queryClient = new QueryClient();
 
@@ -24,7 +26,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
      <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-      <RainbowKitProvider>
+      <RainbowKitProvider modalSize="compact">
         <App />
       </RainbowKitProvider>
       </QueryClientProvider>
