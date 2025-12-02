@@ -10,15 +10,6 @@ import {QueryClientProvider,  QueryClient,} from "@tanstack/react-query";
 import {RainbowKitProvider,} from '@rainbow-me/rainbowkit';
 import { config } from "./config"
 
-/*
-export const config = getDefaultConfig({
-  appName: 'nftGAME',
-  projectId: '18e0c03a63806b7cd58530353f7b951a',
-  chains: [mainnet, polygon, optimism, arbitrum, base, sepolia],
-  ssr: false,
-});
-*/
-
 
 const queryClient = new QueryClient();
 
