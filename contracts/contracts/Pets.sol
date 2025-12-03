@@ -18,6 +18,7 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         uint256 id;
         uint256 price;
         uint256 nutrition;
+        uint256 happy_value;
     }
     mapping(uint256 => Production) public production;
 
@@ -52,9 +53,9 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
 
     //初始化商品
     function init_product() internal {
-        production[1] = Production(1, 100, 10);
-        production[2] = Production(2, 200, 25);
-        production[3] = Production(3, 300, 70);
+        production[1] = Production(1, 100, 10, 200);
+        production[2] = Production(2, 200, 25, 300);
+        production[3] = Production(3, 300, 70, 400);
     }
     //初始化uri
     function init_petsUri() internal {
@@ -123,6 +124,7 @@ contract Pets is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         }
         user_Exp[msg.sender] -= production[_id].price;
         pet_Exp[msg.sender] += production[_id].nutrition;
+        pet_Happy[msg.sender] += production[_id].happy_value;
         add_pet_level();
         return shoppingResult({
             isError: false,
