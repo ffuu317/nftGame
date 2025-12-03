@@ -1,0 +1,146 @@
+@font-face {
+    font-family: 'Jockey One Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../font/JockeyOne-Regular.woff') format('woff');
+    }
+
+
+body{
+    background-color: rgb(255, 255, 255);
+    font-family: 'Jockey One Regular';
+}
+
+
+
+.square{
+    display: flex;
+    position:relative;
+    left:2rem;
+    width: 9rem;
+    height: 9rem;
+    background-color: #f66fcf;
+    z-index: 1;
+    
+}
+
+.row_rectangle{
+    display: flex;
+    position:relative;
+    top:-9rem;
+    left:10.99rem;
+    width: 21.6rem;
+    height: 9rem;
+    background-color: #f7ff1a;
+    z-index: 1;
+}
+
+.column_rectangle{
+    display: flex;
+    position:relative;
+    left:2rem;
+    top:-9rem;
+    width: 9rem;
+    height: 31.5rem;
+    background-color: #f7ff1a;
+    z-index: 1;
+}
+.displayPart{
+    display: flex;
+    position:relative;
+    top:-40.5rem;
+    left: 10.99rem;
+    width: 21.6rem;
+    height: 31.5rem;
+    background-color: white;
+    z-index: 1;
+}
+
+.wholeCard{
+    position: relative;
+    top:10rem;
+    left:5rem;
+}
+
+.shadow{
+    display: flex;
+    position:relative;
+    background-color: #f66fcf;
+    width: 30.6rem;
+    height: 40.5rem;
+    top:-77rem;
+    left: 6rem;
+    z-index: 0;
+}
+
+.Lv{
+    display: flex;
+    position:relative;
+    left:0.5rem;
+    font-size: 2.5rem;
+    color: white;
+}
+.level{
+    display: flex;
+    position:relative;
+    top:2rem;
+    left:-0.5rem;
+    font-size: 5rem;
+    color: white;
+}
+
+.STGE{
+    display: flex;
+    position:relative;
+    top:0rem;
+    left:2rem;
+    font-size: 3.5rem;
+    color: black;
+}
+.stgeValue{
+     display: flex;
+    position:relative;
+    top:1.5rem;
+    left:5rem;
+    font-size: 6rem;
+    color: black;
+}
+
+.year{
+    display: flex;
+    position:relative;
+    top:14rem;
+    left:0rem;
+    font-size: 3rem;
+    color: black;
+}
+
+.month{
+    display: flex;
+    position:relative;
+    top:17rem;
+    left:-1rem;
+    font-size: 6rem;
+    color: black;
+}
+
+.day{
+    display: flex;
+    position:relative;
+    top:24rem;
+    left:-5.4rem;
+    font-size: 5rem;
+    color: black;
+}
+
+.words{
+    position:relative;
+    left:2rem;
+    top:20rem;
+    font-size: 2rem;
+    word-wrap: break-word;
+    overflow-x:hidden;
+    max-height: 10rem;
+    max-width: 19rem;
+    
+}
