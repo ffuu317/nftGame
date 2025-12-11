@@ -1,0 +1,228 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.bg{
+position: relative; 
+width: 100vw;
+height: 100vh;
+
+min-height:940px ;
+min-width: 1690px;
+
+
+background-color: #F7FF1A;
+border-top: 1px solid transparent;
+}
+
+.w1{
+    
+    padding-top:-2rem;
+    display: flex;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    background-color: #F66FCF;
+    width: 18rem;
+    height: 7.4rem;
+}
+
+.w2{ 
+    background-color: white;
+    display: flex;
+    margin-top: -2rem;
+    margin-left: 11rem;
+    width: 23rem;
+    height: 7.4rem;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.inW1{
+    position: absolute;
+    top:0.8rem;
+    font-size: 5rem;
+    color: white;
+    left:4.6rem;
+}
+
+.inW2{
+    position: absolute;
+    top:5.7rem;
+    font-size: 5.5rem;
+    color: black;
+    left:14.6rem;
+    z-index: 10;
+}
+
+.yello{
+    position: relative;
+    margin-top: -6.5rem;
+    margin-left: 3rem;
+    width: 10rem;
+    height: 8rem;
+    background-color: #F7FF1A;
+    transform: rotate(28deg);
+    z-index: 9999;
+}  
+
+
+.yello2{
+    width: 2rem;
+    height: 12rem;
+    background-color: #F7FF1A;
+    margin-left: 15rem;
+    margin-top: -5.5rem;
+    transform: rotate(90deg);
+}
+
+.pink{
+    position: relative;
+    margin-top: -6.5rem;
+    margin-left: 11.5rem;
+    z-index: 0;
+    width: 4.5rem;
+    height: 5.5rem;
+    background-color: #F66FCF;
+    transform:rotate(12deg)
+}  
+
+.websiteName{
+    transform: scale(0.7);
+    position: absolute;
+    left:-4rem;
+    top:-3rem;
+}
+
+.bg2{
+    margin: 11rem 5.5rem;
+    background-color: white;
+    width: 37rem;
+    height: 37rem;
+    transform: scale(1);
+}
+
+.bg3{
+    position: absolute;
+    background-color: black;
+    top:16rem;
+    left:7.5rem;
+    width: 37rem;
+    height: 34rem;
+}
+
+.name{
+    font-size: 3rem;
+    margin-left: 15rem;
+}
+
+.lv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F66FCF;
+    color:white;
+    font-size: 1.5rem;
+    margin-left: 23rem;
+    margin-top: -2.6rem;
+    width: 4rem;
+    height: 2rem;
+}
+
+.EXPbarshadow{
+    margin-top: -0.9rem;
+    margin-left:6.5rem;
+    width: 42rem;
+    height: 2rem;
+    background-color: black;
+}
+
+.EXPbar{
+    margin-top: -5rem;
+    z-index: 100;
+    position: relative;
+}
+
+.exp{
+    font-size: 1.5rem;
+    margin-top: -5.5rem;
+    margin-left: 43rem;
+}
+
+.moodContent{
+    margin-left: 44rem;
+    margin-top: -46rem;
+}
+
+.moodBarshadow{
+    margin-top: -41rem;
+    margin-left: 50.5rem;
+    width: 2rem;
+    height: 42rem;
+    background-color: black;
+}
+
+.moodValue{
+    position: absolute;
+    top:9rem;
+    left:54.5rem;
+    font-size: 1.4rem;
+}
+
+.historyShadow{
+    position: absolute;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    top:2.7rem;
+    right: 6rem;
+    font-size: 2.5rem;
+    height: 3rem;
+    width: 8rem;
+    color:white;
+    background-color: black;
+}
+
+
+.history{
+    top:-0.7rem;
+    right:1rem;
+    position: absolute;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    font-size: 2.5rem;
+    height: 3rem;
+    width: 8rem;
+    color:white;
+    background-color: #F66FCF;
+}
+
+.historyw{
+    position: absolute;
+    top:-0.5rem;
+}
+
+
+.checkIN{
+    position: absolute;
+    top:6rem;
+    right:7.5rem;
+    transform: scale(0.75);
+}
+
+.shop{
+    position: absolute;
+    bottom:4rem;
+    right:13rem;
+    transform: scale(1.2);
+}
+
+.prt{
+    display: flex;
+    max-width: 10rem;
+    max-height: 10rem;
+}

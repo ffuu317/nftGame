@@ -1,4 +1,4 @@
-import "./card.css"
+import "./card111.css"
 import { MyStates } from "../hooks/states"
 
 export function Card(){

@@ -1,0 +1,155 @@
+body{
+    background-color:#F7FF1A;
+}
+
+.shop_icon{
+    position: relative;
+    top:1rem;
+    left:2rem;
+    width: 7rem;
+    height: 3rem;
+    background-color: black;
+}
+
+.shop_img{
+    position: absolute;
+    top:-0.6rem;
+    left:-1rem
+}
+
+.money{
+    position: absolute;
+    color: white;
+    left:2.5rem;
+    font-size: 2rem;
+}
+
+.shop_bg_shadow{
+    position: relative;
+    margin-left:6.5rem;
+    margin-top: 4rem;
+    width:24.7rem;
+    height: 23rem;
+    background:black;   
+}
+
+.shop_bg{
+    position: absolute;
+    top:-2rem;
+    left:-2.5rem;
+    width:24.7rem;
+    height: 23rem;
+    background:white;
+    overflow: auto;   
+}
+
+.goods_buy{
+    background: none;    /* 移除背景 */
+    border: none;        /* 移除邊框 */
+    padding: 0;          /* 移除內距 */
+    cursor: pointer;     /* 滑鼠移上去變手指形狀 */
+}
+
+.goods_Shadow{
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width:20rem;
+    height:7rem;
+    background-color: black;
+    left:2.5rem;
+    top:-2rem;
+}
+
+.goods_bg{
+    top:-1rem;
+    left:-1rem;
+    position: absolute;
+    width:20rem;
+    height:7rem;
+    background-color: #F7FF1A;
+
+}
+
+.goods_number{
+    display: flex;
+    background-color: #F66FCF;
+    width:5rem;
+    height: 2rem;
+    color:white;
+    font-size: 1.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.goods_cost{
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top:1rem;
+    left:4.8rem;
+    width: 2.5rem;
+    height:1.3rem;
+    background-color: black;
+    color: white;
+    font-size: 1.3rem;
+}
+
+.goods_image_shadow{
+    position: absolute;
+    top:3rem;
+    left: 1rem;
+    width: 3.8rem;
+    height: 3.4rem;
+    background-color: #F66FCF;
+}
+
+.goods_image{
+    position: relative;
+    top:-0.4rem;
+    left:-0.5rem;
+}
+
+.goods_des_shadow{
+    position: absolute;
+    left:7rem;
+    top:3.6rem;
+    width: 9.6rem;
+    height: 3rem;
+    background-color:#F66FCF;
+
+}
+
+.goods_des{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    top:-0.5rem;
+    left:-1.2rem;
+    width: 10rem;
+    height: 3rem;
+    background-color: white;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+}
+
+
+.goods_buy_shadow{
+    position: absolute;
+    background-color: black;
+    width: 2.8rem;
+    height:2.8rem;
+    top:0.8rem;
+    left:16.7rem;
+}
+
+.goods_buy{
+    position: absolute;
+    background-color: black;
+    width: 2.8rem;
+    height:2.8rem;
+    top:-0.35rem;
+    left:-0.3rem;
+}

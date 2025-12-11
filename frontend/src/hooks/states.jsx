@@ -6,6 +6,7 @@ const Context = createContext()
 
 export function StatesProvider({children}){
     //const [,] = useState()
+    const[,]= useState()
     const valueToShare ={
     }
     return (
