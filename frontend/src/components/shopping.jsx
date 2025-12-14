@@ -1,4 +1,12 @@
+import { useMyStates } from '../hooks/states'
 import  './shopping.css'
+import { useReadContract,useWriteContract } from "wagmi";
+
+function BUY(){
+
+}
+
+
 
 function ShopCard({number,cost,image,des}){
     return(<div className='goods_Shadow'>
@@ -10,23 +18,25 @@ function ShopCard({number,cost,image,des}){
         <div className='goods_des_shadow'>
             <div className='goods_des'>{des??'还没有描述哦'}</div></div>
         <div className='goods_buy_shadow'>
-            <button className='goods_buy'><img src='/buybtn.png' width='45rem'/></button></div>
+            <button className='goods_buy'><img src='/buybtn.png' width='45rem' ocClick={()=>{
+            }}/></button></div>
     </div>
     </div>)
 
 }
 
-export function Shop({point}){
+export function Shop(){
+    const {money}= useMyStates()
     return(<>
     <div className="shop_icon">
         <img src='/shopping.png' width='45rem' className='shop_img'/>
-        <div className='money'>{point??'0'}<span style={{color:'#F7FF1A'}}>$</span></div>
+        <div className='money'>{money??'0'}<span style={{color:'#F7FF1A'}}>$</span></div>
     </div>
     <div className='shop_bg_shadow'>
     <div className='shop_bg'>
         <ShopCard number={1} cost={114} image='/btc.png' des='这东西应该没有实体吧，对的'/>
         <ShopCard number={2} cost={514} image='/rocket.png' des='传奇机长，准备起飞！'/>
-        <ShopCard number={2} cost={514} image='/rocket.png' des='传奇机长，准备起飞！'/>
+        <ShopCard number={3} cost={100} image='/1级.png' des='初始宠物'/>
     </div></div>
 
    

@@ -1,28 +1,97 @@
 import {Link,useNavigate} from "react-router-dom"
 import {ConnectButton} from "@rainbow-me/rainbowkit"
-import { useReadContract } from "wagmi"
+import { useReadContract, useWriteContract,useWatchContractEvent} from "wagmi"
 import { useState,useEffect } from "react"
 import {contract} from '../hooks/contracts'
 import { ProgressBar } from "../components/progressBar"
 import { MyConnectButton } from "../components/connectButton"
-import { CheckIn } from "../components/checkInPart"
+import { CheckIn_part } from "../components/checkInPart"
 import { Shop } from "../components/shopping"
+import {message} from 'antd'
+import { useMyStates } from "../hooks/states"
+
 import './home.css'
 
 export function Home(){
-    const {data} =useReadContract({
-        address:contract.address,
-        abi:contract.abi,
-        functionName:'getCurrentTimestamp'
-    })
-    const mood = data? data.current_pet_Happy:0;
-    const Exp = data? data.current_pet_Exp:50;
-    const lv = data?data.current_pet_Level:'xx';
+  const {name,setName,mood,setMood,Exp,setExp,lv,setLv,setMoney,money}=useMyStates()
+    const {writeContract}= useWriteContract
 
+  //展示浏览器储存数据，保证刷新后数据正常显示
+  useEffect(()=>{
+    const Data = localStorage.getItem('userData')
+    if(Data){
+      const userData = JSON.parse(Data)
+          setMood(userData.mood)
+          setExp(userData.Exp)
+          setLv(userData.lv)
+          setMoney(userData.money)
+          setName(userData.name)}
+  },[])
+
+
+    //监听getCurrentTimestamp事件函数
+    useWatchContractEvent({
+      address:contract.address,
+        abi:contract.abi,
+        eventName:'getCurrentTimestamp_Event',
+        onLogs(logs){
+          const lastLog = logs[logs.length-1]
+          const data = lastLog.args
+
+          //浏览器存储数据，保证刷新后数据正常显示
+          const user_data = {
+            mood:Number(data.current_pet_Happy),
+            Exp:Number(data.current_pet_Exp),
+            lv:Number(data.current_pet_Level),
+            money:Number(data.current_user_Exp),
+            name:data.current_pet_name
+          }
+
+          setMood(user_data.mood);
+          setExp(user_data.Exp);
+          setLv(user_data.lv);
+          setMoney(user_data.money);
+          setName(user_data.name);
+          console.log(`home.time.message：`,data.message)
+
+          const userData= JSON.stringify(user_data)
+          localStorage.setItem('userData',userData)
+          
+        }
+    })
+    
+    //监听领养宠物函数事件
+    useWatchContractEvent({
+        abi:contract.abi,
+        address:contract.address,
+        eventName:'mint',
+        onLogs(logs){
+          const lastLog = logs[logs.length-1]
+          const data = lastLog.args
+          data.isError?
+          message.error(message,2):
+          message.success(message,2)
+        }
+      })
+
+    //获取宠物名称，在lv>=1时调用
+    useReadContract({
+      abi:contract.abi,
+      address:contract.address,
+      functionName:'get_pet_name',
+      query:{
+        enabled: lv>=1
+      }
+    })
+
+
+
+    //跳转页面的函数
     const navigate =useNavigate()
     function To(){
       navigate('record');
     }
+
     return (<><div className="home">
 
     <div className="bg" >
@@ -39,9 +108,16 @@ export function Home(){
         <div className="display">
             <div className="bg3"></div>
             <div className="bg2">
-                <div className="name">{name?name:'NAME'}</div>
+                <div className="name">{name??'NAME'}</div>
                 <div className="lv">Lv.{lv}</div>
-                <div className="pet"><img src='/1级.png' width='600rem'/></div>
+               {} <button className='getpet' onClick={()=>{
+                writeContract({
+                  abi:contract.abi,
+                  address:contract.address,
+                  functionName:'mint',
+                })
+               }}>领养宠物</button>
+         
             </div>
         </div>
 
@@ -57,25 +133,25 @@ export function Home(){
             <ProgressBar progress={mood} isUpright={true}>Mood</ProgressBar>
             <div className="moodValue">{mood} <br/>
                  /<br/>
-                 100 <img src='../../public/mood.png' width='17rem'/><br/> </div>
+                 100 <img src='../../public/mood.png' width='21rem'/><br/> </div>
           </div>
           <div className="moodBarshadow"></div>
         </div>
 
-            <div ><MyConnectButton/></div>
+        <MyConnectButton/>
 
-            <div className="historyShadow"><button  className="history" onClick={To}><div className="historyw">History</div></button></div> 
+        <div className="historyShadow"><button  className="history" onClick={To}><div className="historyw">History</div></button></div> 
 
-             <div className="checkIN"><CheckIn /></div>
+        <div className="checkIN"><CheckIn_part /></div>
 
-             <div className="shop"><Shop/></div>
+        <div className="shop"><Shop/></div>
     </div>
         </div>  </>)
 }
 
 
 
-/*
+/*              <div className="pet"><img src='/1级.png' width='600rem'/></div>
     <button onClick={CheckIn}>签到</button>
     <ConnectButton accountStatus="avatar" chainStatus="icon" showBalance={false}/>
     <Link to="/record" className="Linkbtn">跳转到record</Link>*/

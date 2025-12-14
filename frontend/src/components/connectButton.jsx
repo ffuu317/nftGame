@@ -1,5 +1,34 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useWriteContract,useAccount} from 'wagmi';
+import { contract } from '../hooks/contracts';
+import { useState,useEffect } from 'react';
 export const MyConnectButton = () => {
+  const {writeContract} = useWriteContract()
+  const [shouldWrite,setShouldWrite] = useState(false)
+  const {isConnected} =useAccount()
+  useEffect(()=>{
+    if(shouldWrite&&isConnected){
+      console.log(`现在在使用时间函数`)
+    writeContract({
+        address: contract.address,
+        abi: contract.abi,
+        functionName: 'getCurrentTimestamp'
+      }, {
+        // 添加回调以确保状态重置
+        onSuccess: () => {
+             console.log("交易请求发送成功");
+             setShouldWrite(false); // 成功后再关闭开关
+        },
+        onError: (err) => {
+             console.log("交易请求失败/拒绝", err);
+             setShouldWrite(false); // 失败也要关闭开关，避免死循环
+        }
+      })
+      
+    setShouldWrite(false)
+    }
+
+  },[shouldWrite,setShouldWrite,isConnected])
   return (
     <ConnectButton.Custom>
       {({
@@ -43,7 +72,10 @@ return (<div style={{
       height:'3rem',
 }}>
   <button 
-    onClick={openConnectModal} 
+    onClick={()=>{
+      openConnectModal()
+      setShouldWrite(true)
+    }}
     type="button" 
     style={{
       left:'-0.3rem',

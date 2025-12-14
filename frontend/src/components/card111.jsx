@@ -1,8 +1,8 @@
 import "./card111.css"
-import { MyStates } from "../hooks/states"
+import { useMyStates } from "../hooks/states"
 
 export function Card(){
-    const {level,stge,month,day} = MyStates()
+    const {level,stge,month,day} = useMyStates()
     return (<><div className="wholeCard">   
     <div className="square">
         <div className="Lv">Lv.</div>
