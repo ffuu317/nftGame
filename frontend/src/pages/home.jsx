@@ -1,20 +1,21 @@
 import {Link,useNavigate} from "react-router-dom"
 import {ConnectButton} from "@rainbow-me/rainbowkit"
-import { useReadContract, useWriteContract,useWatchContractEvent} from "wagmi"
+import { useReadContract, useWriteContract,useWatchContractEvent,useAccount} from "wagmi"
 import { useState,useEffect } from "react"
 import {contract} from '../hooks/contracts'
 import { ProgressBar } from "../components/progressBar"
 import { MyConnectButton } from "../components/connectButton"
 import { CheckIn_part } from "../components/checkInPart"
 import { Shop } from "../components/shopping"
-import {message} from 'antd'
 import { useMyStates } from "../hooks/states"
 
 import './home.css'
 
 export function Home(){
-  const {name,setName,mood,setMood,Exp,setExp,lv,setLv,setMoney}=useMyStates()
-    const {writeContract}= useWriteContract()
+  const {name,setName,mood,setMood,Exp,setExp,lv,setLv,setMoney,money,days,setDays,tokenId,setTokenId}=useMyStates()
+  const {writeContract}= useWriteContract()
+  const {address} = useAccount()
+  const [isLoaded,setIsload] =useState(false)
 
   //展示浏览器储存数据，保证刷新后数据正常显示
   useEffect(()=>{
@@ -25,8 +26,27 @@ export function Home(){
           setExp(userData.Exp)
           setLv(userData.lv)
           setMoney(userData.money)
-          setName(userData.name)}
+          setDays(userData.days)
+          }
+          setIsload(true)
   },[])
+
+
+  //保存数据到本地
+useEffect(() => {
+        if (!isLoaded) {
+            return 
+        }
+        const user_data = {
+            money: money, 
+            mood: mood,
+            Exp: Exp,
+            lv: lv,
+            days:days
+        }
+        console.log("自动存档中:", user_data) 
+        localStorage.setItem('userData', JSON.stringify(user_data))
+    }, [money, mood, Exp, lv,isLoaded,days]) 
 
 
     //监听getCurrentTimestamp事件函数
@@ -34,29 +54,20 @@ export function Home(){
       address:contract.address,
         abi:contract.abi,
         eventName:'getCurrentTimestamp_Event',
+          filters: {
+    user: address 
+  },
         onLogs(logs){
           const lastLog = logs[logs.length-1]
           const data = lastLog.args
-
-          //浏览器存储数据，保证刷新后数据正常显示
-          const user_data = {
-            mood:Number(data.current_pet_Happy),
-            Exp:Number(data.current_pet_Exp),
-            lv:Number(data.current_pet_Level),
-            money:Number(data.current_user_Exp),
-            name:data.current_pet_name
-          }
-
-          setMood(user_data.mood);
-          setExp(user_data.Exp);
-          setLv(user_data.lv);
-          setMoney(user_data.money);
-          setName(user_data.name);
+          setMood(Number(data.current_pet_Happy));
+          setExp(Number(data.current_pet_Exp));
+          setLv(Number(data.current_pet_Level));
+          setMoney(Number(data.current_user_Exp));
+          console.log(`current_pet_name:${data.current_pet_name}`)
+          setName(data.current_pet_name);
           console.log(`home.time.message：`,data.message)
 
-          const userData= JSON.stringify(user_data)
-          localStorage.setItem('userData',userData)
-          
         }
     })
     
@@ -65,17 +76,22 @@ export function Home(){
         abi:contract.abi,
         address:contract.address,
         eventName:'mint_Event',
+        poll: true, 
+        pollingInterval: 1_000, // 每1秒轮询一次（仅用于调试）
         onLogs(logs){
+        console.log("收到原始 Logs:", logs); // 先看这个有没有输出
           const lastLog = logs[logs.length-1]
           const data = lastLog.args
           data.isError?
           console.error(`领养失败：${data.message}`):
           console.log(`领养成功：${data.message}`)
-          setExp(data.current_user_Exp)
+          setMoney(Number(data.current_user_Exp))
+          setLv(Number(data.current_pet_Level))
+          setTokenId(Number(data.tokenId))
         }
       })
 
-    //获取宠物名称，在lv>=1时调用
+  /*  //获取宠物名称，在lv>=1时调用
     useReadContract({
       abi:contract.abi,
       address:contract.address,
@@ -85,7 +101,7 @@ export function Home(){
       }
     })
 
-
+*/
 
     //跳转页面的函数
     const navigate =useNavigate()

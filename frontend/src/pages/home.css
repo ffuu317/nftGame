@@ -100,6 +100,7 @@ border-top: 1px solid transparent;
 }
 
 .bg2{
+    position: relative;
     margin: 11rem 5.5rem;
     background-color: white;
     width: 37rem;
@@ -122,6 +123,8 @@ border-top: 1px solid transparent;
 }
 
 .lv{
+    position: absolute;
+    top:6rem;
     display: flex;
     justify-content: center;
     align-items: center;

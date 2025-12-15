@@ -1,5 +1,5 @@
 export const contract={
-    address:'0x6d200B93e8E835F96E785E6B26f494B088a66284',
+    address:'0x24A36f57117Ca2dE63AD9E47E667Fb57a3808c5b',
     abi:[
     {
       "inputs": [
@@ -327,19 +327,7 @@ export const contract={
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "current_user_Exp",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
           "name": "current_pet_Happy",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "current_pet_Exp",
           "type": "uint256"
         },
         {
@@ -383,6 +371,12 @@ export const contract={
           "indexed": false,
           "internalType": "uint256",
           "name": "current_pet_Level",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
@@ -758,6 +752,34 @@ export const contract={
       "name": "shopping",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "show_information",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {

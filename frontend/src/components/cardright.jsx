@@ -1,7 +1,7 @@
 import "./cardright.css";
-import { MyStates } from "../hooks/states";
+import { useMyStates } from "../hooks/states";
 export function Cardright() {
-  const { level, stge, month, day } = MyStates();
+  const { level, stge, month, day } = useMyStates();
   return (
     <div class="container1">
       <div className="square1">

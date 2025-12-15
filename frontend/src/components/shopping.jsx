@@ -34,9 +34,9 @@ export function Shop(){
     </div>
     <div className='shop_bg_shadow'>
     <div className='shop_bg'>
-        <ShopCard number={1} cost={114} image='/btc.png' des='这东西应该没有实体吧，对的'/>
-        <ShopCard number={2} cost={514} image='/rocket.png' des='传奇机长，准备起飞！'/>
-        <ShopCard number={3} cost={100} image='/1级.png' des='初始宠物'/>
+        <ShopCard number={1} cost={114} image='/球.png' des='这东西应该没有实体吧，对的'/>
+        <ShopCard number={2} cost={514} image='/萝卜.png' des='传奇机长，准备起飞！'/>
+        <ShopCard number={3} cost={100} image='/白菜.png' des='初始宠物'/>
     </div></div>
 
    

@@ -12,6 +12,7 @@ export function StatesProvider({children}){
     const[Exp,setExp] = useState(0)
     const[name,setName]= useState('NAME')
     const [days,setDays] = useState(0)
+    const [tokenId,setTokenId]=useState()
     const valueToShare ={
         money,
         setMoney,
@@ -20,7 +21,8 @@ export function StatesProvider({children}){
         lv,setLv,
         Exp,setExp,
         name,setName,
-        days,setDays
+        days,setDays,
+        tokenId,setTokenId,
     }
     return (
         <Context.Provider value={valueToShare}>

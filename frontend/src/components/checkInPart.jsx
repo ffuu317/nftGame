@@ -2,11 +2,13 @@ import './checkInPart.css'
 import { useWatchContractEvent, useWriteContract,useWaitForTransactionReceipt ,useAccount} from 'wagmi'
 import { contract } from '../hooks/contracts'
 import {useMyStates } from '../hooks/states'
+import { useState } from 'react'
 
 
 export function CheckIn_part({blessing}){
     const {setMoney,money,setDays,days} = useMyStates()
     const {address} = useAccount()
+    const [checkInTxHash,setCheckInTxHash] = useState()
     let {writeContract } = useWriteContract()
 
   //监听签到函数
@@ -15,9 +17,13 @@ export function CheckIn_part({blessing}){
         abi: contract.abi,
         eventName: 'add_user_exp_event',
         onLogs(logs){
-            console.log(`签到中`)
+            
             const lastLog = logs[logs.length-1]
             const data = lastLog.args
+            if (lastLog.transactionHash !== checkInTxHash) {
+                return 
+            }
+            console.log(`签到中`)
             setMoney(Number(data.current_user_Exp))
             setDays(Number(data.count))
             console.log(`CheinPart.event.count:${data.count}`)
@@ -35,7 +41,7 @@ const fake_month = now.getMonth() + 1;
 const date = now.getDate();
 
 // 补零操作 (例如把 5 变成 '05')
-const month = fake_month < 10 ? `0${month}` : fake_month;
+const month = fake_month < 10 ? `0${fake_month}` : fake_month;
 const day = date < 10 ? `0${date}` : date;
 
 
@@ -60,7 +66,11 @@ writeContract({
      address:contract.address,
      abi:contract.abi,
      functionName:"add_user_exp"
- })}
+ },{onSuccess: (txHash) => {
+     setCheckInTxHash(txHash) 
+                            },})
+
+}
  else{
     alert('请先连接钱包')
  }
