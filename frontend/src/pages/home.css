@@ -227,8 +227,10 @@ border-top: 1px solid transparent;
 }
 
 .pet{
+   position: absolute;
     position:absolute;
     top:-1rem;
+    
 }
 
 .getpet{

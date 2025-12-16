@@ -140,6 +140,22 @@ useEffect(() => {
       navigate('record');
     }
 
+    //对每张图片的大小单独调整
+    const style=lv<3?{}:
+    lv==3?{
+      transform: 'scale(0.9)',
+      top:'2rem',
+    }:
+    lv==4?{
+      transform: 'scale(0.9)',
+       top:'5rem',
+    }:
+    {
+      transform: 'scale(0.85)',
+       top:'2rem',
+    }
+
+
     return (<><div className="home">
 
       {isModal? <div className="over_shadow">
@@ -163,7 +179,7 @@ useEffect(() => {
             <div className="bg2">
                 <div className="name">{name??'NAME'}</div>
                 <div className="lv">Lv.{lv}</div>
-            {lv ?<div className="pet"><img src={image} width='600rem'/></div>: <button className='getpet' onClick={()=>{
+            {lv ?<div className="pet" style={style}><img src={image} width='600rem'/></div>: <button className='getpet' onClick={()=>{
                 writeContract({
                   abi:contract.abi,
                   address:contract.address,
@@ -201,6 +217,7 @@ useEffect(() => {
     </div>
         </div>  </>)
 }
+
 
 
 

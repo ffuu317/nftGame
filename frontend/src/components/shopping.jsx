@@ -114,3 +114,4 @@ export function Shop(){
 
 /* <div className='up_scrollbar_button'><img src='./upArrow.png' width='50rem'/></div>
     <div className='down_scrollbar_button'><img src='./downArrow.png' width='50rem'/></div> */
+
