@@ -2,8 +2,8 @@ import './checkInPart.css'
 import { useWatchContractEvent, useWriteContract,useWaitForTransactionReceipt ,useAccount} from 'wagmi'
 import { contract } from '../hooks/contracts'
 import {useMyStates } from '../hooks/states'
-import { useState } from 'react'
-
+import { useState ,useEffect} from 'react'
+import { parseEventLogs } from 'viem'
 
 export function CheckIn_part({blessing}){
     const {setMoney,money,setDays,days} = useMyStates()
@@ -12,7 +12,35 @@ export function CheckIn_part({blessing}){
     let {writeContract } = useWriteContract()
 
   //监听签到函数
-    useWatchContractEvent({
+    const {data:receipt,isSuccess}=  useWaitForTransactionReceipt({hash:checkInTxHash})
+    useEffect(()=>{
+          if(isSuccess){
+            console.log(`签到中...`)
+            console.log("原始 Receipt Logs:", receipt.logs)
+            const logs =parseEventLogs({
+              address:contract.address,
+              abi:contract.abi,
+              eventName: 'add_user_exp_Event',
+              logs: receipt.logs
+
+            })
+
+            console.log("解析后的 Logs:", logs)
+            if(logs.length>0){
+              const data =logs[0].args
+
+              setMoney(Number(data.current_user_Exp));
+              setDays(Number(data.count))
+
+              setCheckInTxHash(undefined)
+              console.log(`签到成功，用户经验：${Number(data.current_user_Exp)}
+            签到次数：${Number(data.count)}`)
+          }
+        }
+        },[receipt,isSuccess])
+
+  /* 因未知原因失败的监听方式 
+   useWatchContractEvent({
         address: contract.address,
         abi: contract.abi,
         eventName: 'add_user_exp_event',
@@ -27,10 +55,9 @@ export function CheckIn_part({blessing}){
             setMoney(Number(data.current_user_Exp))
             setDays(Number(data.count))
             console.log(`CheinPart.event.count:${data.count}`)
-            console.log(`签到成功，用户经验：${Number(data.current_user_Exp)}
-            签到次数：${Number(data.count)}`)
+            
         }
-    })
+    })*/
   
 const now = new Date();
 
@@ -66,8 +93,8 @@ writeContract({
      address:contract.address,
      abi:contract.abi,
      functionName:"add_user_exp"
- },{onSuccess: (txHash) => {
-     setCheckInTxHash(txHash) 
+ },{onSuccess: (Hash) => {
+     setCheckInTxHash(Hash) 
                             },})
 
 }

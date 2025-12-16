@@ -1,5 +1,5 @@
 export const contract={
-    address:'0xf05196c2AFB659eA10cA818D9f343e7B36907663',
+    address:'0x4cf101d2C6686433FdbAC29B8DA575ceb5d3A1b7',
     abi:[
     {
       "inputs": [
@@ -451,6 +451,12 @@ export const contract={
           "indexed": false,
           "internalType": "uint256",
           "name": "current_pet_Level",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "current_pet_Happy",
           "type": "uint256"
         }
       ],

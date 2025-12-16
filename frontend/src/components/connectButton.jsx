@@ -1,11 +1,18 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useWriteContract,useAccount} from 'wagmi';
+import { useWriteContract,useAccount,useWaitForTransactionReceipt} from 'wagmi';
+import { parseEventLogs } from 'viem';
 import { contract } from '../hooks/contracts';
 import { useState,useEffect } from 'react';
+import { useMyStates } from '../hooks/states';
+
 export const MyConnectButton = () => {
   const {writeContract} = useWriteContract()
   const [shouldWrite,setShouldWrite] = useState(false)
   const {isConnected} =useAccount()
+  const [hash,setHash] = useState()
+  const {setExp,setMoney,setMood,setLv,setTokenId,setDays,setName} = useMyStates()
+
+
   useEffect(()=>{
     if(shouldWrite&&isConnected){
       console.log(`现在在使用时间函数`)
@@ -15,20 +22,49 @@ export const MyConnectButton = () => {
         functionName: 'getCurrentTimestamp'
       }, {
         // 添加回调以确保状态重置
-        onSuccess: () => {
-             console.log("交易请求发送成功");
+        onSuccess: (hash1) => {
+              setHash(hash1)
+             console.log("时间函数交易请求发送成功");
              setShouldWrite(false); // 成功后再关闭开关
         },
         onError: (err) => {
-             console.log("交易请求失败/拒绝", err);
+             console.log("时间函数交易请求失败/拒绝", err);
              setShouldWrite(false); // 失败也要关闭开关，避免死循环
         }
       })
-      
     setShouldWrite(false)
     }
 
   },[shouldWrite,setShouldWrite,isConnected])
+
+//监听getCurrentTimestamp事件函数，获取name,宠物经验，用户经验，心情，等级，tokenid，签到次数
+      const {data:timeDAta,isSuccess:isTimeSuccess}= useWaitForTransactionReceipt({hash:hash})
+      useEffect(()=>{
+
+        if(isTimeSuccess){
+        const logs =parseEventLogs({
+          address:contract.address,
+          abi:contract.abi,
+          eventName: 'getCurrentTimestamp_Event',
+          logs:timeDAta.logs
+        })
+
+        if(logs.length>0){
+          const data =logs[0].args
+          setMood(Number(data.current_pet_Happy));
+          setExp(Number(data.current_pet_Exp));
+          setLv(Number(data.current_pet_Level));
+          setMoney(Number(data.current_user_Exp));
+          setName(data.current_pet_name);
+          setTokenId(Number(data.user_tokenid));
+          setDays(Number(data.current_user_add_cnt))
+          console.log(`current_pet_name:${data.current_pet_name}`)
+          console.log(`home.time.message：`,data.message)
+
+      }}},[isTimeSuccess,timeDAta])
+
+
+
   return (
     <ConnectButton.Custom>
       {({

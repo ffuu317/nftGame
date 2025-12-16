@@ -1,23 +1,62 @@
 import { useMyStates } from '../hooks/states'
 import  './shopping.css'
-import { useAccount, useReadContract,useWatchContractEvent,useWriteContract } from "wagmi";
+import { useAccount, useReadContract,useWaitForTransactionReceipt,useWatchContractEvent,useWriteContract } from "wagmi";
 import { contract } from '../hooks/contracts';
-
+import { useState,useEffect } from 'react';
+import { parseEventLogs } from 'viem';
 
 
 
 function ShopCard({number,cost,image,des}){
-    const{lv} = useMyStates()
+    const{lv,setLv,setMoney,setExp,setMood} = useMyStates()
     const {address} =useAccount()
+    const [hash,setHash] = useState()
     const {writeContract} = useWriteContract()
+
+    //监听商店函数
+    const {data,isSuccess} = useWaitForTransactionReceipt({hash:hash})
+    useEffect(()=>{
+              if(isSuccess){
+                console.log(`签到中...`)
+    
+                const logs =parseEventLogs({
+                  address:contract.address,
+                  abi:contract.abi,
+                  eventName: 'shopping_Event',
+                  logs: data.logs
+                })
+    
+                if(logs.length>0){
+                  const data =logs[0].args
+    
+                setLv(Number(data.current_pet_Level))
+                if(Number(data.current_user_Exp))setMoney(Number(data.current_user_Exp))
+                if(Number(data.current_pet_Exp))setExp(Number(data.current_pet_Exp))
+                if(Number(data.current_pet_Happy))setMood(Number(data.current_pet_Happy))
+
+                  console.log(`购买成功，用户经验：${Number(data.current_pet_Exp)}
+                宠物心情：${Number(data.current_pet_Mood)}`)
+              }
+            }
+            },[data,isSuccess])
+
+
+    /*因未知原因错误的监听方式
     useWatchContractEvent({
         address:contract.address,
         abi:contract.abi,
-        filters: {
-    user: address 
-  },
-        eventName:'shopping',   
-           })
+        eventName:'shopping',
+        onLogs(logs){
+            const lastLog = logs[logs.length-1]
+            const data = lastLog.args
+            if (lastLog.transactionHash !== hash) {
+                return 
+            }
+            setLv(data.current_pet_Level)
+            setMoney(data.current_user_Exp)
+            setExp(data.current_pet_Exp)
+        }   
+           })*/
     return(<div className='goods_Shadow'>
     <div className='goods_bg'>
         <div className='goods_number'>Goods {number??0}</div>
@@ -27,14 +66,21 @@ function ShopCard({number,cost,image,des}){
         <div className='goods_des_shadow'>
             <div className='goods_des'>{des??'还没有描述哦'}</div></div>
         <div className='goods_buy_shadow'>
-            <button className='goods_buy'><img src='/buybtn.png' width='45rem' ocClick={()=>{
+            <button className='goods_buy'><img src='/buybtn.png' width='45rem' onClick={()=>{
                 if(lv){
            writeContract({
             address:contract.address,
             abi:contract.abi,
             functionName:'shopping',
             args:[number]
-           }) 
+           },{onSuccess:(hash)=>{
+            setHash(hash)
+            console.log(`购买${number}商品成功！`)
+           },
+           onError:(error)=>{
+             console.log(`购买${number}商品失败！`,error)
+           }
+        }) 
         }else{
             alert('请先领养宠物')
         }

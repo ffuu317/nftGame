@@ -1,5 +1,5 @@
 import {Link,useNavigate} from "react-router-dom"
-import { useReadContract, useWriteContract,useWatchContractEvent,useAccount} from "wagmi"
+import { useReadContract, useWriteContract,useWatchContractEvent,useAccount, useWaitForTransactionReceipt} from "wagmi"
 import { useState,useEffect } from "react"
 import {contract} from '../hooks/contracts'
 import { ProgressBar } from "../components/progressBar"
@@ -7,8 +7,9 @@ import { MyConnectButton } from "../components/connectButton"
 import { CheckIn_part } from "../components/checkInPart"
 import { Shop } from "../components/shopping"
 import { useMyStates } from "../hooks/states"
-import  NFTSDK  from 'nft-sdk'
+import  {NFTSDK}  from 'nft-sdk'
 import { MyInput } from "../components/Myinput"
+import { parseEventLogs } from 'viem'
 
 import './home.css'
 
@@ -21,14 +22,16 @@ export function Home(){
     setMoney,money,
     days,setDays,
     tokenId,setTokenId,
-    image,setImage
+    image,setImage,
+    isModal,setIsmodal,
   }=useMyStates()
 
   const {writeContract}= useWriteContract()
-  const {address} = useAccount()
   const [isLoaded,setIsload] =useState(false)
-  const [isModal,setIsmodal] = useState(false)
+  const [petHash,setPetHash] = useState()
   const [inputName,setInputName] = useState('')
+
+  
 
   //展示浏览器储存数据，保证刷新后数据正常显示
   useEffect(()=>{
@@ -40,6 +43,8 @@ export function Home(){
           setLv(userData.lv)
           setMoney(userData.money)
           setDays(userData.days)
+          setTokenId(userData.tokenId)
+          setName(userData.name)
           }
           setIsload(true)
   },[])
@@ -55,59 +60,46 @@ useEffect(() => {
             mood: mood,
             Exp: Exp,
             lv: lv,
-            days:days
+            days:days,
+            tokenId:tokenId,
+            name:name,
+
         }
         console.log("自动存档中:", user_data) 
         localStorage.setItem('userData', JSON.stringify(user_data))
-    }, [money, mood, Exp, lv,isLoaded,days]) 
+    }, [money, mood, Exp, lv,isLoaded,days,name]) 
 
-
-    //监听getCurrentTimestamp事件函数，获取name,宠物经验，用户经验，心情，等级，tokenid，签到次数
-    useWatchContractEvent({
-      address:contract.address,
-        abi:contract.abi,
-        eventName:'getCurrentTimestamp_Event',
-          filters: {
-    user: address 
-  },
-        onLogs(logs){
-          const lastLog = logs[logs.length-1]
-          const data = lastLog.args
-          setMood(Number(data.current_pet_Happy));
-          setExp(Number(data.current_pet_Exp));
-          setLv(Number(data.current_pet_Level));
-          setMoney(Number(data.current_user_Exp));
-          setName(data.current_pet_name);
-          setTokenId(Number(data.user_tokenid));
-          setDays(Number(data.current_user_add_cnt))
-          console.log(`current_pet_name:${data.current_pet_name}`)
-          console.log(`home.time.message：`,data.message)
-
-        }
-    })
+    
     
     //监听领养宠物函数事件
-    useWatchContractEvent({
-        abi:contract.abi,
-        address:contract.address,
-        eventName:'mint_Event',
-        onLogs(logs){
-          const lastLog = logs[logs.length-1]
-          const data = lastLog.args发
-          data.isError?
-          console.error(`领养失败：${data.message}`):
-          console.log(`领养成功：${data.message}`)
-          setMoney(Number(data.current_user_Exp))
-          setLv(Number(data.current_pet_Level))
-          setTokenId(Number(data.tokenId))
+    const {data:getPet,isSuccess:isPetComfired} =useWaitForTransactionReceipt({hash:petHash})
+    useEffect(()=>{
+      if(isPetComfired){
+        const logs =parseEventLogs({
+          address:contract.address,
+          abi:contract.abi,
+          eventName: 'mint_Event',
+          logs:getPet.logs
+        })
+
+        if(logs.length>0){
+          const data =logs[0].args
+
+          if (data.isError) {
+          console.error(`领养失败：${data.message}`);
+        } else {
+          console.log(`领养成功：${data.message}`);
+          setMoney(Number(data.current_user_Exp));
+          setLv(Number(data.current_pet_Level));
+          setTokenId(Number(data.tokenId));
+
+          setIsmodal(true);  //触发命名弹窗
         }
-      },{onSuccess:()=>{
-        setIsmodal(true)
-      }})
-
-      //输入宠物名字
-
-
+      }else {
+        console.warn("交易成功，但在 Logs 里没找到 mint_Event。原因可能是：ABI不匹配 或 合约没触发该事件");
+      }
+    }
+    },[getPet,isPetComfired])
 
 
       //获取宠物名字
@@ -125,14 +117,19 @@ useEffect(() => {
 
     //展示·宠物部分
     async function showpet() {
-    if(lv){
+      try{
     const sdk = new NFTSDK({
       contractAddress: contract.address, 
       abi: contract.abi,             
       rpcUrl: 'https://sepolia.infura.io/v3/1753e902a5d243499b272f4f7309ab87'  
     });
+
+
     const imageUrl = await sdk.getNFTImageUrl(tokenId);
     setImage(imageUrl)
+
+  }catch(error){
+    console.error('nft图片链接加载失败：',error)
   }}
   showpet()
 
@@ -171,7 +168,7 @@ useEffect(() => {
                   abi:contract.abi,
                   address:contract.address,
                   functionName:'mint',
-                })
+                },{onSuccess:(writeHash)=>{setPetHash(writeHash)}})
                }}>领养宠物</button>}
          
             </div>

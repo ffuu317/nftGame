@@ -5,8 +5,7 @@ import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { contract } from "../hooks/contracts";
 
 export function MyInput({ inputValue, setInputValue,  }) {
-  const {setName,name}=useMyStates()
-  const [isWrite,setIsWrite] =useState(false)
+  const {setName,name,setIsmodal}=useMyStates()
   const {writeContract}=useWriteContract()
   const [hash,setHash] =useState()
   const {isSuccess} = useWaitForTransactionReceipt({
@@ -14,30 +13,31 @@ export function MyInput({ inputValue, setInputValue,  }) {
   })
 
   useEffect(()=>{
+    if(isSuccess){
     console.log(`命名成功！,Ta的名字是：${name}`)
+    setName(inputValue)
+    setIsmodal(false)
+  }
   },[isSuccess])
 
 
 function confirmClick(){
       setName(inputValue)
-      setIsWrite(true)
   }
 
-  writeContract({
-    address:contract.address,
-    abi:contract.abi,
-    functionName:'set_pet_name',
-    args:[name],
-    query:{
-      enable:isWrite
-    }
-  },{onSuccess:(writehash)=>{
-    setHash(writehash)
-  }})
+
 
 
   return (
     <input
+      style={{
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center',
+        width:'20rem',
+        height:'2rem',
+        borderRadius:'1px',
+      }}
       type="text"
       placeholder="请输入宠物名字，完成后按下Enter"
       value={inputValue}
@@ -45,6 +45,18 @@ function confirmClick(){
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           confirmClick();
+          writeContract({
+          address:contract.address,
+          abi:contract.abi,
+          functionName:'set_pet_name',
+          args:[inputValue],
+          },
+          {onSuccess:(writehash)=>{
+              setHash(writehash)},
+            onError:(error)=>{
+              console.error('用户拒绝或交易出错', error);}
+          },)
+          
         }
       }}
     />
