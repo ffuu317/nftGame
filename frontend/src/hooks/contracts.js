@@ -1,5 +1,5 @@
 export const contract = {
-  address: "0xDDF8560738a74249e07d2b2709BD9F84F5E77A99",
+  address: "0x4C8500a133145D4e9e8F5907EE67eCBF286BC64e",
   abi: [
     {
       inputs: [
@@ -401,6 +401,12 @@ export const contract = {
           indexed: false,
           internalType: "uint256",
           name: "tokenId",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "current_pet_Happy",
           type: "uint256",
         },
       ],

@@ -1,3 +1,4 @@
+console.log("useMyStates =", useMyStates);
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useReadContract } from "wagmi";
@@ -11,7 +12,7 @@ export function Record() {
   const { lv, setLv } = useMyStates();
   const [history, setHistory] = useState([]);
   const [index, setIndex] = useState(0);
-  const [pet_LevelUri, setPet_LevelUri] = useState([]);
+  const { pet_LevelUri, setPet_LevelUri } = useMyStates([]);
   const { image } = useMyStates();
   const {
     data: historyData,
@@ -27,8 +28,9 @@ export function Record() {
   useEffect(() => {
     if (!Array.isArray(historyData)) return;
 
-    setPet_LevelUri(historyData[0]);
-    setLv(historyData[1]);
+    setPet_LevelUri([historyData[0]]);
+    const lvNum = Number(historyData[1]);
+    setLv(lvNum);
 
     console.log("Pet Level URI:", pet_LevelUri);
     console.log("Level:", lv);
