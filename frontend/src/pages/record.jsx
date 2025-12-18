@@ -8,10 +8,11 @@ import { Pinksquare } from "../components/pinksquare.jsx";
 import "./record.css";
 import { contract } from "../hooks/contracts";
 export function Record() {
-  const { lv, image } = useMyStates();
+  const { lv, setLv } = useMyStates();
   const [history, setHistory] = useState([]);
   const [index, setIndex] = useState(0);
-
+  const [pet_LevelUri, setPet_LevelUri] = useState([]);
+  const { image } = useMyStates();
   const {
     data: historyData,
     isLoading,
@@ -26,8 +27,8 @@ export function Record() {
   useEffect(() => {
     if (!Array.isArray(historyData)) return;
 
-    const pet_LevelUri = historyData[0];
-    lv = historyData[1];
+    setPet_LevelUri(historyData[0]);
+    setLv(historyData[1]);
 
     console.log("Pet Level URI:", pet_LevelUri);
     console.log("Level:", lv);
