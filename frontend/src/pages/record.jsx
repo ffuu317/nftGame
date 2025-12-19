@@ -1,16 +1,19 @@
-import React from "react";
-import { Card } from "../components/card.jsx";
-import { useMyStates } from "../hooks/states";
-import { Pinksquare } from "../components/pinksquare.jsx";
+console.log("useMyStates =", useMyStates);
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { useReadContract } from "wagmi";
-import { contract } from "../hooks/contracts";
+import { useMyStates } from "../hooks/states";
+import { Card } from "../components/card.jsx";
 import { Background } from "../components/background.jsx";
-
+import { Pinksquare } from "../components/pinksquare.jsx";
 import "./record.css";
-
+import { contract } from "../hooks/contracts";
 export function Record() {
+  const { lv, setLv } = useMyStates();
+  const [history, setHistory] = useState([]);
+  const [index, setIndex] = useState(0);
+  const { pet_LevelUri, setPet_LevelUri } = useMyStates([]);
+  const { image } = useMyStates();
   const {
     data: historyData,
     isLoading,
@@ -19,43 +22,60 @@ export function Record() {
   } = useReadContract({
     address: contract.address,
     abi: contract.abi,
-    functionName: "getHistory",
+    functionName: "get_history",
   });
 
-  const [history, setHistory] = useState([]);
-
-  const [index, setIndex] = useState(0);
   useEffect(() => {
     if (!Array.isArray(historyData)) return;
 
-    const parsed = historyData.map((item) => ({
-      time: item.time.toString(),
-      username: item.username,
-    }));
+    setPet_LevelUri([historyData[0]]);
+    const lvNum = Number(historyData[1]);
+    setLv(lvNum);
 
-    setHistory(parsed);
-    setIndex(parsed.length - 1);
+    console.log("Pet Level URI:", pet_LevelUri);
+    console.log("Level:", lv);
+
+    const nftImageUrl = pet_LevelUri?.uri1 || "/pets/default.png";
+
+    setHistory([
+      ...history,
+      {
+        lv: Number(lv ?? 0),
+        pet_LevelUri,
+        nftImageUrl,
+      },
+    ]);
+
+    setIndex(historyData.length - 1);
   }, [historyData]);
 
-  const current = history.length ? history[index] : null;
-
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="containerRecord">
-      <div className="times">DAYs</div>
-      {current && (
-        <>
-          <div className="time">{Number(current.time)}</div>
-          <div className="username">{current.username}</div>
-        </>
-      )}
-
+      <div className="picture">
+        {pet_LevelUri?.map((item, index) => {
+          if (index < lv - 1) {
+            return (
+              <div key={index}>
+                <img src={item.uri1} alt="pet" />
+              </div>
+            );
+          }
+          return null;
+        })}
+      </div>
+      <div className="times">DAYS</div>
+      <div className="time">{lv}</div>
+      <div className="username">cy</div>
       <div className="black"></div>
-
       <div className="cardPos">
         <Card />
       </div>
-
       <button
         className="leftPos1"
         onClick={() => {
@@ -65,7 +85,6 @@ export function Record() {
       >
         <img src="/1.png" alt="left" />
       </button>
-
       <button
         className="rightPos1"
         onClick={() => {
@@ -75,22 +94,22 @@ export function Record() {
       >
         <img src="/2.png" alt="right" />
       </button>
-
       <div className="pinkPos">
         <Pinksquare />
       </div>
-
       <div className="bgPos">
         <Background />
       </div>
-
       <button className="editPos" onClick={() => navigate("/")}>
         <img src="/3.png" alt="close" />
       </button>
-
       <button className="closePos" onClick={() => navigate("/")}>
         <img src="/4.png" alt="back" />
       </button>
+
+      <div className="home">
+        {image && <img src={image} alt="pet" width="600rem" />}
+      </div>
     </div>
   );
 }
