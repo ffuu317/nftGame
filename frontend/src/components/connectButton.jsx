@@ -7,14 +7,14 @@ import { useMyStates } from '../hooks/states';
 
 export const MyConnectButton = () => {
   const {writeContract} = useWriteContract()
-  const [shouldWrite,setShouldWrite] = useState(false)
+  
   const {isConnected} =useAccount()
   const [hash,setHash] = useState()
   const {setExp,setMoney,setMood,setLv,setTokenId,setDays,setName} = useMyStates()
 
 
   useEffect(()=>{
-    if(shouldWrite&&isConnected){
+    if(isConnected){
       console.log(`现在在使用时间函数`)
     writeContract({
         address: contract.address,
@@ -25,17 +25,14 @@ export const MyConnectButton = () => {
         onSuccess: (hash1) => {
               setHash(hash1)
              console.log("时间函数交易请求发送成功");
-             setShouldWrite(false); // 成功后再关闭开关
         },
         onError: (err) => {
-             console.log("时间函数交易请求失败/拒绝", err);
-             setShouldWrite(false); // 失败也要关闭开关，避免死循环
+             console.log("时间函数交易请求失败/拒绝", err);// 失败也要关闭开关，避免死循环
         }
       })
-    setShouldWrite(false)
     }
 
-  },[shouldWrite,setShouldWrite,isConnected])
+  },[isConnected])
 
 //监听getCurrentTimestamp事件函数，获取name,宠物经验，用户经验，心情，等级，tokenid，签到次数
       const {data:timeDAta,isSuccess:isTimeSuccess}= useWaitForTransactionReceipt({hash:hash})
@@ -110,7 +107,6 @@ return (<div style={{
   <button 
     onClick={()=>{
       openConnectModal()
-      setShouldWrite(true)
     }}
     type="button" 
     style={{
