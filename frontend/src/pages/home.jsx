@@ -72,7 +72,7 @@ useEffect(() => {
     
     
     //监听领养宠物函数事件
-    const {data:getPet,isSuccess:isPetComfired} =useWaitForTransactionReceipt({hash:petHash})
+    const {data:getPet,isSuccess:isPetComfired} =useWaitForTransactionReceipt({hash:petHash,confirmations: 1,})
     useEffect(()=>{
       if(isPetComfired){
         const logs =parseEventLogs({
@@ -116,23 +116,23 @@ useEffect(() => {
 
 
     //展示·宠物部分
-    async function showpet() {
-      try{
-    const sdk = new NFTSDK({
-      contractAddress: contract.address, 
-      abi: contract.abi,             
-      rpcUrl: 'https://sepolia.infura.io/v3/1753e902a5d243499b272f4f7309ab87'  
-    });
-
-
-    const imageUrl = await sdk.getNFTImageUrl(tokenId);
-    setImage(imageUrl)
-
-  }catch(error){
-    console.error('nft图片链接加载失败：',error)
-  }}
-  showpet()
-
+    useEffect(() => {
+    async function fetchPetImage() {
+      try {
+        const sdk = new NFTSDK({
+          contractAddress: contract.address,
+          abi: contract.abi,
+          // 建议：将 API Key 放入 Vercel 的 Environment Variables 中
+          rpcUrl: 'https://sepolia.infura.io/v3/1753e902a5d243499b272f4f7309ab87' 
+        });
+        const imageUrl = await sdk.getNFTImageUrl(tokenId);
+        setImage(imageUrl);
+      } catch (error) {
+        console.error('nft图片链接加载失败：', error);
+      }
+    }
+    fetchPetImage();
+  }, [tokenId,lv])
 
     //跳转页面的函数
     const navigate =useNavigate()

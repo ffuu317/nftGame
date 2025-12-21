@@ -10,6 +10,6 @@ export const config = getDefaultConfig({
   transports: {
     // 对于 Mainnet，可以使用默认的（或者也换成 Alchemy）
     [mainnet.id]: http(),
-    [sepolia.id]: http('https://ethereum-sepolia.publicnode.com'),
+    [sepolia.id]: http('https://sepolia.infura.io/v3/1753e902a5d243499b272f4f7309ab87'),
   },
 });
