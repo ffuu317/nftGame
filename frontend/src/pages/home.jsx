@@ -182,6 +182,10 @@ useEffect(() => {
                 <div className="name">{name??'NAME'}</div>
                 <div className="lv">Lv.{lv}</div>
             {lv ?<div className="pet" style={style}><img src={image} width='600rem'/></div>: <button className='getpet' onClick={()=>{
+              if (money<100) {
+                alert("你的$小于100，请先签到!")
+                return ;
+              }
                 writeContract({
                   abi:contract.abi,
                   address:contract.address,
